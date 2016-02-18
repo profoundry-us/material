@@ -14,24 +14,29 @@ angular.module('material.components.showHide', [
 
 
 function createDirective(name, targetValue) {
-  return ['$mdUtil', function($mdUtil) {
+  return ['$mdUtil', '$mdResize', function($mdUtil, $mdResize) {
     return {
       restrict: 'A',
       multiElement: true,
-      link: function($scope, $element, $attr) {
-        var unregister = $scope.$on('$md-resize-enable', function() {
-          unregister();
+      link: function(scope, element, attr) {
+        $mdResize.addResizer(scope);
 
-          $scope.$watch($attr[name], function(value) {
-            if (!!value === targetValue) {
-              $mdUtil.nextTick(function() {
-                $scope.$broadcast('$md-resize');
-              });
-              $mdUtil.dom.animator.waitTransitionEnd($element).then(function() {
-                $scope.$broadcast('$md-resize');
+        var cachedTransitionStyles = window.getComputedStyle(element[0]);
+
+        scope.$watch(attr[name], function(value) {
+          if (!!value === targetValue) {
+            if ($mdResize.hasListeners(scope)) {
+              $mdResize.fireResize(scope);
+
+              var opts = {
+                cachedTransitionStyles: cachedTransitionStyles
+              };
+
+              $mdUtil.dom.animator.waitTransitionEnd(element, opts).then(function() {
+                $mdResize.fireResize(scope);
               });
             }
-          });
+          }
         });
       }
     };

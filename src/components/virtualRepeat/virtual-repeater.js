@@ -80,7 +80,7 @@ var NUM_EXTRA = 3;
 
 /** @ngInject */
 function VirtualRepeatContainerController(
-    $$rAF, $mdUtil, $parse, $rootScope, $window, $scope, $element, $attrs) {
+    $$rAF, $mdUtil, $parse, $rootScope, $window, $scope, $element, $attrs, $mdResize) {
   this.$rootScope = $rootScope;
   this.$scope = $scope;
   this.$element = $element;
@@ -153,8 +153,7 @@ function VirtualRepeatContainerController(
       jWindow.off('resize', debouncedUpdateSize);
     });
 
-    $scope.$emit('$md-resize-enable');
-    $scope.$on('$md-resize', boundUpdateSize);
+    $mdResize.addListener(this.$scope, boundUpdateSize);
   }));
 }
 
