@@ -19,6 +19,7 @@ function MdResize() {
      * is automatically called if the scope is destroyed.
      */
     addResizer: function(scope) {
+      console.log(' *** adding resizer on: ', scope.$id);
       if (!scope.$$mdResizers) {
         scope.$$mdResizers = [];
       }
@@ -56,6 +57,7 @@ function MdResize() {
      * NOTE: May return `null` if no parent resizer was found.
      */
     addListener: function(scope, callback) {
+      console.log(' *** adding listeners on: ', scope.$id);
       var resizers = getSelfOrParentResizers(scope);
 
       if (resizers && resizers.length) {

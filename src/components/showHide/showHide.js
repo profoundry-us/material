@@ -24,6 +24,7 @@ function createDirective(name, targetValue) {
         var cachedTransitionStyles = window.getComputedStyle(element[0]);
 
         scope.$watch(attr[name], function(value) {
+          console.log(' *** watch: ', value, targetValue, $mdResize.hasListeners(scope));
           if (!!value === targetValue) {
             if ($mdResize.hasListeners(scope)) {
               $mdResize.fireResize(scope);

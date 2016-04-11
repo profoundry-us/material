@@ -1,16 +1,17 @@
 describe('showHide', function() {
-  var $compile, $timeout, defered, scope, spy;
+  var $compile, $timeout, $mdResize, defered, scope, listenerSpy;
 
   beforeEach(module('material.components.showHide'));
 
-  beforeEach(inject(function(_$compile_, $mdUtil, $q, $rootScope, _$timeout_) {
+  beforeEach(inject(function(_$compile_, $mdUtil, $q, $rootScope, _$timeout_, _$mdResize_) {
     $compile = _$compile_;
     $timeout = _$timeout_;
+    $mdResize = _$mdResize_;
     defered = $q.defer();
     scope = $rootScope.$new();
-    spy = jasmine.createSpy();
+    listenerSpy = jasmine.createSpy('listener');
 
-    scope.$on('$md-resize', spy);
+    //scope.$on('$md-resize', spy);
     spyOn($mdUtil.dom.animator, 'waitTransitionEnd').and.returnValue(defered.promise);
   }));
 
@@ -19,24 +20,26 @@ describe('showHide', function() {
   });
 
   describe('ng-hide', function() {
-    it('should notify when the node unhides', function() {
+    fit('should notify when the node unhides', function() {
       scope.hide = true;
+      
+      $mdResize.addListener(scope, listenerSpy);
+      
       var element = $compile('<div ng-hide="hide"></div>')(scope);
-      scope.$broadcast('$md-resize-enable');
       scope.$apply();
-      expect(spy).not.toHaveBeenCalled();
+      expect(listenerSpy).not.toHaveBeenCalled();
 
-      // Expect a $broadcast when showing.
+      // Expect a notification when showing.
       scope.hide = false;
       scope.$apply();
       $timeout.flush();
-      expect(spy).toHaveBeenCalled();
+      expect(listenerSpy).toHaveBeenCalled();
 
       // Expect a $broadcast on transitionEnd after showing.
-      spy.calls.reset();
+      listenerSpy.calls.reset();
       defered.resolve();
       scope.$apply();
-      expect(spy).toHaveBeenCalled();
+      expect(listenerSpy).toHaveBeenCalled();
     });
 
     it('should not notify on hide', function() {
