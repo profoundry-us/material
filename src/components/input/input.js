@@ -175,34 +175,107 @@ function labelDirective() {
  *   guarantees a reflow every digest cycle.
  *
  * @usage
+ *
+ * The `<md-input-container>` component provides many different usage scenarios as outlined below.
+ *
+ * <h3>Block Forms</h3>
+ *
  * <hljs lang="html">
  * <md-input-container>
  *   <label>Color</label>
- *   <input type="text" ng-model="color" required md-maxlength="10">
+ *   <input type="text" ng-model="color">
  * </md-input-container>
  * </hljs>
  *
- * <h3>With Errors</h3>
+ * By default, input containers like the one above are considered block form elements that will
+ * appear one on top of the other. Additionally, they provide spacing and margins for error messages
+ * or the `md-char-counter` provided by the `md-maxlength` directive.
  *
- * `md-input-container` also supports errors using the standard `ng-messages` directives and
- * animates the messages when they become visible using from the `ngEnter`/`ngLeave` events or
- * the `ngShow`/`ngHide` events.
- *
- * By default, the messages will be hidden until the input is in an error state. This is based off
- * of the `md-is-error` expression of the `md-input-container`. This gives the user a chance to
- * fill out the form before the errors become visible.
+ * If you have a large form with many inputs, you can also apply the `md-block-form` class directly
+ * to the form element (or any container) and these styles will be applied to all
+ * `<md-input-container>` elements within the form.
  *
  * <hljs lang="html">
- * <form name="colorForm">
+ * <form class="md-block-form">
+ *   <md-input-container>...</md-input-container>
+ *   <md-input-container>...</md-input-container>
+ *   <md-input-container>...</md-input-container>
+ * </form>
+ * </hljs>
+ *
+ * _<b>Note:</b> This also works with the `ngForm` directive as well as standard `<form>` elements._
+ * 
+ * <h3>Inline Forms</h3>
+ *
+ * If you need your input to be treated more like a an inline element where the inputs sit
+ * side-by-side, you may apply the `md-inline` class to your input container.
+ *
+ * This is perfect if you have a very minimal and compact form.
+ *
+ * <hljs lang="html">
+ * <md-input-container class="md-inline">
+ *   <label>Username</label>
+ *   <input type="text" ng-model="username" required md-maxlength="10">
+ * </md-input-container>
+ *
+ * <md-input-container class="md-inline">
+ *   <label>Password</label>
+ *   <input type="password" ng-model="password" required md-maxlength="10">
+ * </md-input-container>
+ * </hljs>
+ * 
+ * Additionally, as with the block forms, you may apply a class of `md-inline-form` to a container
+ * of your inputs to have all of them display inline.
+ *
+ * <hljs lang="html">
+ * <form class="md-inline-form">
+ *   <md-input-container>...</md-input-container>
+ *   <md-input-container>...</md-input-container>
+ *   <md-input-container>...</md-input-container>
+ * </form>
+ * </hljs>
+ *
+ * _<b>Note:</b> If your inline inputs have errors, you can add the `md-error-spacing` class to the
+ * `<md-input-container>` or the parent `<form>` element, which provide enough space for a 1 line
+ * error message._
+ *
+ * <h3>With Errors</h3>
+ *
+ * `md-input-container` supports errors using the standard `ng-messages` directives and animates the
+ * messages when they become visible using the `ngEnter`/`ngLeave` events or the `ngShow`/`ngHide`
+ * events.
+ *
+ * <hljs lang="html">
+ * <form name="questForm">
+ *   <md-input-container>
+ *     <label>Quest</label>
+ *     <input type="text" name="quest" ng-model="quest" required md-maxlength="10">
+ *     <div ng-messages="questForm.quest.$error">
+ *       <div ng-message="required">You must be on a quest!</div>
+ *       <div ng-message="md-maxlength">That quest is too long!</div>
+ *     </div>
+ *   </md-input-container>
+ *
  *   <md-input-container>
  *     <label>Favorite Color</label>
- *     <input name="favoriteColor" ng-model="favoriteColor" required>
- *     <div ng-messages="userForm.lastName.$error">
- *       <div ng-message="required">This is required!</div>
+ *     <input type="text" name="favoriteColor" ng-model="favoriteColor" required md-maxlength="10">
+ *     <div ng-messages="questForm.favoriteColor.$error">
+ *       <div ng-message="required">You have to have a favorite color!</div>
+ *       <div ng-message="md-maxlength">Can you give me the color's hex value?</div>
  *     </div>
  *   </md-input-container>
  * </form>
  * </hljs>
+ *
+ * _<b>Note:</b> If you plan to use two inline elements side-by-side, you should ensure that they
+ * either both have the `md-error-spacing` class, or that neither of them do. We do not currently
+ * support mixed styles._
+ *
+ * <h3>Messages Hiding and Animations</h3>
+ *
+ * By default, the messages will be hidden until the input is in an error state. This is based off
+ * of the `md-is-error` expression of the `md-input-container`. This gives the user a chance to
+ * fill out the form before the errors become visible.
  *
  * We automatically disable this auto-hiding functionality if you provide any of the following
  * visibility directives on the `ng-messages` container:
@@ -215,7 +288,7 @@ function labelDirective() {
  * to the `ng-messages` container. This may be helpful if you always want to see the error messages
  * or if you are building your own visibilty directive.
  *
- * _<b>Note:</b> The `md-auto-hide` attribute is a static string that is  only checked upon
+ * _<b>Note:</b> The `md-auto-hide` attribute is a static string that is only checked upon
  * initialization of the `ng-messages` directive to see if it equals the string `false`._
  *
  * <hljs lang="html">
@@ -229,6 +302,7 @@ function labelDirective() {
  *       <div ng-message="minlength">That's too short!</div>
  *     </div>
  *   </md-input-container>
+ *
  *   <md-input-container>
  *     <label>Biography</label>
  *     <textarea name="bio" ng-model="biography" required md-maxlength="150"></textarea>
@@ -237,9 +311,7 @@ function labelDirective() {
  *       <div ng-message="md-maxlength">That's too long!</div>
  *     </div>
  *   </md-input-container>
- *   <md-input-container>
- *     <input aria-label='title' ng-model='title'>
- *   </md-input-container>
+ *
  *   <md-input-container>
  *     <input placeholder='title' ng-model='title'>
  *   </md-input-container>
@@ -253,7 +325,7 @@ function labelDirective() {
  *
  * The `md-input` and `md-input-container` directives use very specific positioning to achieve the
  * error animation effects. Therefore, it is *not* advised to use the Layout system inside of the
- * `<md-input-container>` tags. Instead, use relative or absolute positioning.
+ * `<md-input-container>` tags. Instead, we recommend you use relative or absolute positioning.
  *
  */
 

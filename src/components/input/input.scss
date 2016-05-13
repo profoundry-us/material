@@ -24,26 +24,70 @@ $icon-top-offset: ($icon-offset - $input-padding-top - $input-border-width-focus
 
 $icon-float-focused-top: -8px !default;
 
+// For md-block and md-error-spacing classes, setup a spacer that is always visible as
+// placeholder for any messages so we don't change height with only 1 message
+@mixin errors-spacing() {
+  .md-errors-spacer {
+    // Ensure the element always takes up space, even if empty
+    min-height: $input-error-height;
+    min-width: 1px;
+  }
+}
+
+.md-error-spacing {
+  md-input-container {
+    @include errors-spacing();
+  }
+}
+
+.md-block-form {
+  md-input-container {
+    display: block;
+
+    @include errors-spacing();
+  }
+}
+
 md-input-container {
   @include pie-clearfix();
+
   display: inline-block;
   position: relative;
   padding: $input-container-padding;
-  margin: 18px 0;
   vertical-align: middle;
+
+  &:not([md-no-float]) {
+    margin-top: 18px;
+  }
 
   &.md-block {
     display: block;
   }
 
-  // Setup a spacer that is always there as a placeholder for any messages so we don't change
-  // height with only 1 message
+  // 1) By default, we turn on the error spacing
+  @include errors-spacing();
+
   .md-errors-spacer {
     @include rtl(float, right, left);
-    min-height: $input-error-height;
+  }
 
-    // Ensure the element always takes up space, even if empty
-    min-width: 1px;
+  // 2) If we are inside of an inline form, turn off the error spacing
+  .md-inline-form &, &.md-inline {
+    .md-errors-spacer {
+      display: none;
+    }
+  }
+
+  // 3) Allow users to turn error spacing back on in an inline form with the .md-error-spacing class
+  .md-inline-form .md-error-spacing &, .md-inline-form.md-error-spacing &,
+  .md-inline-form &.md-error-spacing, &.md-inline.md-error-spacing {
+    .md-errors-spacer {
+      display: block;
+    }
+  }
+
+  &.md-block, &.md-error-spacing {
+    @include errors-spacing();
   }
 
   > md-icon {
@@ -101,7 +145,7 @@ md-input-container {
 
   label:not(._md-container-ignore) {
     position: absolute;
-    bottom: 100%;
+    bottom: calc(100% + 2px);
     @include rtl(left, 0, auto);
     @include rtl(right, auto, 0);
 
@@ -175,8 +219,6 @@ md-input-container {
     background: none;
     padding-top: $input-padding-top;
     padding-bottom: $input-border-width-focused - $input-border-width-default;
-    padding-left: 2px;
-    padding-right: 2px;
     border-width: 0 0 $input-border-width-default 0;
     line-height: $input-line-height;
     height: $input-line-height + ($input-padding-top * 2);

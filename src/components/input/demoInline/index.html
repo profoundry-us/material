@@ -1,0 +1,78 @@
+<div ng-controller="DemoCtrl" layout-padding ng-cloak="">
+  <div>
+
+    <form name="emptyForm" class="md-inline-form">
+
+      <md-input-container>
+        <label>Favorite Food</label>
+        <md-select ng-model="empty.food">
+          <md-option ng-repeat="food in empty.foods" value="{{food}}">
+            {{food}}
+          </md-option>
+        </md-select>
+      </md-input-container>
+
+      <md-datepicker ng-model="empty.birthday" md-placeholder="Birthday"></md-datepicker>
+
+      <md-input-container>
+        <label>Name jane</label>
+        <input ng-model="empty.name" type="text">
+      </md-input-container>
+
+      <md-input-container>
+        <label>Description</label>
+        <textarea ng-model="empty.description"></textarea>
+      </md-input-container>
+    </form>
+
+    <form name="filledForm" class="md-inline-form">
+      <md-input-container>
+        <label>Favorite Food</label>
+        <md-select ng-model="filled.food">
+          <md-option ng-repeat="food in filled.foods" value="{{food}}">
+            {{food}}
+          </md-option>
+        </md-select>
+      </md-input-container>
+
+      <md-datepicker ng-model="filled.birthday" md-placeholder="Birthday"></md-datepicker>
+
+      <md-input-container style="width: 90px">
+        <label>Name jane</label>
+        <input ng-model="filled.name" type="text">
+      </md-input-container>
+
+      <md-input-container>
+        <label>Name jane</label>
+        <input ng-model="empty.name" type="text">
+      </md-input-container>
+
+      <md-input-container>
+        <label>Description</label>
+        <textarea ng-model="filled.description"></textarea>
+      </md-input-container>
+    </form>
+
+    <form name="filledForm2" class="md-inline-form">
+      <md-input-container>
+        <md-radio-group ng-model="filled.color">
+          <md-radio-button value="Red">Red</md-radio-button>
+          <md-radio-button value="Blue">Blue</md-radio-button>
+        </md-radio-group>
+      </md-input-container>
+
+      <md-input-container>
+        <md-button class="md-raised">View License Terms</md-button>
+      </md-input-container>
+
+      <md-input-container>
+        <md-checkbox ng-model="filled.accept">Accept</md-checkbox>
+      </md-input-container>
+
+      <md-input-container>
+        <md-switch ng-model="filled.theme">Use theme</md-switch>
+      </md-input-container>
+    </form>
+  </div>
+
+</div>
